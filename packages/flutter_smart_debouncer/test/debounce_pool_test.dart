@@ -1,17 +1,19 @@
 import 'package:fake_async/fake_async.dart';
-import 'package:flutter_smart_debouncer/flutter_smart_debouncer.dart';
-import 'package:test/test.dart';
+import 'package:flutter_test/flutter_test.dart';
+import '../lib/src/core/debounce_pool.dart';
+import '../lib/src/core/smart_debouncer.dart' as debouncer;
 
 void main() {
   tearDown(() {
-    debugNow = DateTime.now;
+    debouncer.debugNow = () => DateTime.now();
   });
 
   test('per-key isolation', () async {
     Future<int?>? aFuture;
     Future<int?>? bFuture;
     fakeAsync((async) {
-      debugNow = () => async.getClock(DateTime.now).now();
+      final clock = async.getClock(DateTime.now());
+      debouncer.debugNow = () => clock.now();
       final pool = DebouncePool<int>(defaultDelay: const Duration(milliseconds: 100));
 
       var aCount = 0;
@@ -30,7 +32,8 @@ void main() {
 
   test('ttl eviction disposes idle debouncers', () {
     fakeAsync((async) {
-      debugNow = () => async.getClock(DateTime.now).now();
+      final clock = async.getClock(DateTime.now());
+      debouncer.debugNow = () => clock.now();
       final pool = DebouncePool<void>(
         defaultDelay: const Duration(milliseconds: 10),
         ttl: const Duration(milliseconds: 50),
@@ -47,7 +50,8 @@ void main() {
     Future<int?>? future;
     Future<int?>? flushed;
     fakeAsync((async) {
-      debugNow = () => async.getClock(DateTime.now).now();
+      final clock = async.getClock(DateTime.now());
+      debouncer.debugNow = () => clock.now();
       final pool = DebouncePool<int>(defaultDelay: const Duration(milliseconds: 100));
 
       var value = 0;

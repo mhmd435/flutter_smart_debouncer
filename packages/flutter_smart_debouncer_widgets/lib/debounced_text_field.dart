@@ -5,7 +5,7 @@ import 'package:flutter_smart_debouncer/flutter_smart_debouncer.dart';
 
 /// A [TextField] that debounces the [onChangedDebounced] callback.
 class DebouncedTextField extends StatefulWidget {
-  const DebouncedTextField({
+ DebouncedTextField({
     super.key,
     required this.delay,
     this.leading = false,
