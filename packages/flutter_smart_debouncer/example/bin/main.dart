@@ -10,22 +10,22 @@ Future<void> main() async {
     ttl: const Duration(seconds: 5),
   );
 
-  // print('Simulating autosave edits');
-  // for (var i = 0; i < 3; i++) {
-  //   debouncer(() async {
-  //     print('[autosave] commit revision $i');
-  //   });
-  //   await Future<void>.delayed(const Duration(milliseconds: 200));
-  // }
+  print('Simulating autosave edits');
+  for (var i = 0; i < 3; i++) {
+    debouncer(() async {
+      print('[autosave] commit revision $i');
+    });
+    await Future<void>.delayed(const Duration(milliseconds: 200));
+  }
 
 
-  // print('Throttle scrolling');
-  // for (var i = 0; i < 20; i++) {
-  //   throttle(() async {
-  //     print('[throttle] frame $i');
-  //   });
-  //   await Future<void>.delayed(const Duration(milliseconds: 100));
-  // }
+  print('Throttle scrolling');
+  for (var i = 0; i < 20; i++) {
+    throttle(() async {
+      print('[throttle] frame $i');
+    });
+    await Future<void>.delayed(const Duration(milliseconds: 100));
+  }
 
   print('Per-field validation');
   for (final field in ['email', 'username', 'email']) {
@@ -34,10 +34,10 @@ Future<void> main() async {
     });
   }
 
-  // final debouncedValue = DebouncedValue<String>('', delay: const Duration(milliseconds: 200));
-  // debouncedValue.stream.listen((value) => print('[value] $value'));
-  // debouncedValue.set('hello');
-  // debouncedValue.set('hello world');
-  // await Future<void>.delayed(const Duration(milliseconds: 300));
-  // await debouncedValue.close();
+  final debouncedValue = DebouncedValue<String>('', delay: const Duration(milliseconds: 200));
+  debouncedValue.stream.listen((value) => print('[value] $value'));
+  debouncedValue.set('hello');
+  debouncedValue.set('hello world');
+  await Future<void>.delayed(const Duration(milliseconds: 300));
+  await debouncedValue.close();
 }
