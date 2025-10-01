@@ -4,8 +4,6 @@ import 'package:fake_async/fake_async.dart';
 import 'package:flutter_smart_debouncer/flutter_smart_debouncer.dart';
 import 'package:test/test.dart';
 
-import '../lib/flutter_smart_debouncer.dart';
-
 void main() {
   group('SmartDebouncer', () {
     test('leading only executes immediately and ignores trailing calls', () {
@@ -48,10 +46,12 @@ void main() {
 
         async.elapse(const Duration(milliseconds: 100));
         expect(count, 1);
+      });
+    });
   test('flush waits for running action then executes pending one', () async {
     Future<void>? flushFuture;
     fakeAsync((async) {
-      debugNow = () => async.getClock(DateTime.now).now();
+      debugNow = () => async.getClock(DateTime.now()).now();
       final debouncer = SmartDebouncer<void>(delay: const Duration(milliseconds: 100));
 
       final log = <String>[];
@@ -83,7 +83,7 @@ void main() {
     Object? captured;
     StackTrace? capturedTrace;
     fakeAsync((async) {
-      debugNow = () => async.getClock(DateTime.now).now();
+      debugNow = () => async.getClock(DateTime.now()).now();
       final debouncer = SmartDebouncer<void>(
         delay: const Duration(milliseconds: 10),
         onError: (error, stackTrace) {
@@ -104,4 +104,5 @@ void main() {
     expect(capturedTrace, isNotNull);
     });
   });
+
 }

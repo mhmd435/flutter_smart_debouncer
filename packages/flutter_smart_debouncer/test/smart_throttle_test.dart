@@ -1,6 +1,7 @@
 import 'package:fake_async/fake_async.dart';
-import 'package:flutter_smart_debouncer/flutter_smart_debouncer.dart';
 import 'package:test/test.dart';
+
+import 'package:flutter_smart_debouncer/flutter_smart_debouncer.dart';
 
 void main() {
   test('leading true trailing false throttles to first call', () async {
