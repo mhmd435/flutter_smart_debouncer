@@ -1,8 +1,5 @@
 ## 1.0.0
 
-- Stable, null-safe release of SmartDebouncer, DebouncePool, SmartThrottle, stream extensions, and DebouncedValue.
-- Improved documentation, updated example, and enhanced lint configuration for pub.dev compliance.
-
-## 1.1.0
-
-- _TBD_
+- Unified the core utilities and Flutter widgets into a single package.
+- Added SmartDebouncerTextField and SmartDebouncerButton built on the shared Debouncer.
+- Refreshed documentation, example app, and tests for the consolidated release.

@@ -1,11 +1,7 @@
-# flutter_smart_debouncer monorepo
+# flutter_smart_debouncer
 
-This repository hosts the source for the `flutter_smart_debouncer` Dart package and
-its optional Flutter widget bindings.
+This repository hosts the unified `flutter_smart_debouncer` package. It bundles
+core debouncing utilities and Flutter widgets in a single publishable package.
 
-Packages:
-
-- `packages/flutter_smart_debouncer` – core, platform-agnostic debouncing and throttling utilities.
-- `packages/flutter_smart_debouncer_widgets` – Flutter widgets built on top of the core package.
-
-See the individual package directories for documentation, changelogs, and examples.
+The package source lives in [`packages/flutter_smart_debouncer`](packages/flutter_smart_debouncer).
+See its README for full documentation, examples, and contributing guidance.

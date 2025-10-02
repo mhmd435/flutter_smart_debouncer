@@ -4,126 +4,84 @@
 [![Build status](https://github.com/example/flutter_smart_debouncer/actions/workflows/dart.yml/badge.svg)](https://github.com/example/flutter_smart_debouncer/actions/workflows/dart.yml)
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
-Smart debouncing and throttling for modern Dart & Flutter apps. Keep noisy signals under control with predictable execution semantics, async safety, and a polished developer experience.
+`flutter_smart_debouncer` is a unified toolkit for taming noisy inputs. It
+combines production-ready debouncing utilities with polished Flutter widgets so
+you can guard API calls, smooth out text entry, and prevent accidental double
+submits using a single dependency.
 
-`flutter_smart_debouncer` bundles production-ready utilities for debouncing, throttling, pooling, and reactive values with full null-safety. Use it to smooth text inputs, rate-limit network calls, or coordinate work across isolates and widgets.
+> **Debouncing** coalesces a burst of events into a single callback once the
+> user pauses. It keeps search boxes snappy, throttles autosave traffic, and
+> prevents repeated taps on important buttons.
 
-> Looking for a ready-made widget? Check out the optional [`flutter_smart_debouncer_widgets`](../flutter_smart_debouncer_widgets) package.
+## Quick start
 
-## Features
-
-- ✅ Async-aware debouncer with leading/trailing edges and `maxWait`
-- ✅ Pool debouncers by key for form validation and batching workflows
-- ✅ Smart throttle with separate leading/trailing control
-- ✅ Stream extensions to debounce/throttle without extra dependencies
-- ✅ `DebouncedValue` reactive helper for simple state management
-- ✅ Deterministic tests with `fake_async`
-- ✅ Thorough documentation and example app
-
-## Installation
-
-Add the package to your `pubspec.yaml`:
+Add the package to your app:
 
 ```yaml
 dependencies:
   flutter_smart_debouncer: ^1.0.0
 ```
 
-Then run `dart pub get` (or `flutter pub get`).
-
-## Usage
-
-### Debounce a search box
+### Debounce anything in Dart code
 
 ```dart
-final debouncer = SmartDebouncer<void>(delay: const Duration(milliseconds: 300));
-
-Future<void> onQueryChanged(String value) async {
-  await debouncer(() => search(value));
-}
-```
-
-### Auto-save with leading + trailing + maxWait
-
-```dart
-final autoSave = SmartDebouncer<void>(
-  delay: const Duration(seconds: 2),
-  leading: true,
-  trailing: true,
-  maxWait: const Duration(seconds: 8),
+final searchDebouncer = Debouncer<void>(
+  delay: const Duration(milliseconds: 300),
 );
 
-void onDocumentChanged(String snapshot) {
-  autoSave(() async {
-    await saveToServer(snapshot);
+Future<void> onQueryChanged(String value) {
+  return searchDebouncer(() async {
+    await searchApi(value);
   });
 }
 ```
 
-### Per-key validation pool
+### SmartDebouncerTextField
 
 ```dart
-final validators = DebouncePool<void>(defaultDelay: const Duration(milliseconds: 400));
-
-Future<void> validateField(String field, String value) {
-  return validators.call(field, () => validate(field, value));
-}
-```
-
-### Throttle scroll callbacks
-
-```dart
-final scrollThrottle = SmartThrottle<void>(interval: const Duration(milliseconds: 100));
-
-void onScroll() {
-  scrollThrottle(() => updateScrollPosition());
-}
-```
-
-### Stream helpers
-
-```dart
-stream.debounceTime(const Duration(milliseconds: 300));
-stream.throttleTime(
-  const Duration(milliseconds: 100),
-  leading: true,
-  trailing: true,
+SmartDebouncerTextField(
+  delay: const Duration(milliseconds: 250),
+  decoration: const InputDecoration(labelText: 'Search'),
+  onChangedDebounced: (value) {
+    debugPrint('Searching for $value');
+  },
 );
 ```
 
-### DebouncedValue for reactive state
+### SmartDebouncerButton
 
 ```dart
-final value = DebouncedValue<int>(0, delay: const Duration(milliseconds: 200));
-value.stream.listen(print);
-value.set(1);
-value.set(2);
+SmartDebouncerButton(
+  delay: const Duration(milliseconds: 600),
+  child: const Text('Submit'),
+  onPressed: () {
+    debugPrint('Submitted once');
+  },
+);
 ```
 
-## Examples
+## What's inside?
 
-Clone the repository and run the [example application](example/lib/main.dart) to see the utilities in action:
+- ✅ Battle-tested debouncer with leading/trailing edges, `maxWait`, cancel, and flush APIs
+- ✅ Widget wrappers for text fields and buttons built on top of the same debouncer
+- ✅ Stream helpers, throttle utilities, and reactive `DebouncedValue`
+- ✅ Thorough tests, lints, and an example Flutter app demonstrating both styles
+
+## Example app
+
+See [`example/lib/main.dart`](example/lib/main.dart) for a Flutter demo that
+simulates an API call using the core `Debouncer` and shows the smart widgets in
+a material UI.
+
+Run it with:
 
 ```bash
-cd example
-dart run
+flutter run
 ```
 
-The example prints debounced, throttled, and pooled output directly to the console and demonstrates `DebouncedValue` usage.
+## Changelog
 
-## API reference
-
-Read the full API reference on [pub.dev](https://pub.dev/documentation/flutter_smart_debouncer/latest/).
-
-## Contributing
-
-Contributions are welcome! Please:
-
-1. File an issue describing the change or bug fix.
-2. Run the analyzer and tests (`dart analyze`, `dart test`).
-3. Update documentation and add tests for new features.
-
-For monorepo-specific workflows, refer to the repository README.
+See [CHANGELOG.md](CHANGELOG.md) for release notes.
 
 ## License
 

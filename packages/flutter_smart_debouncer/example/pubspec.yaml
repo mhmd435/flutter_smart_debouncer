@@ -5,7 +5,17 @@ version: 1.0.0
 
 environment:
   sdk: '>=3.0.0 <4.0.0'
+  flutter: '>=3.0.0'
 
 dependencies:
+  flutter:
+    sdk: flutter
   flutter_smart_debouncer:
     path: ../
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+flutter:
+  uses-material-design: true

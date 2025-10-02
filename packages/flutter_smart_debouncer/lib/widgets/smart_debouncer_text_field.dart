@@ -1,11 +1,11 @@
-library flutter_smart_debouncer_widgets;
-
 import 'package:flutter/material.dart';
-import 'package:flutter_smart_debouncer/flutter_smart_debouncer.dart';
 
-/// A [TextField] that debounces the [onChangedDebounced] callback.
-class DebouncedTextField extends StatefulWidget {
- DebouncedTextField({
+import '../core/debouncer.dart';
+
+/// A [TextField] that throttles its debounced callback using
+/// [Debouncer]-powered semantics.
+class SmartDebouncerTextField extends StatefulWidget {
+  const SmartDebouncerTextField({
     super.key,
     required this.delay,
     this.leading = false,
@@ -26,6 +26,7 @@ class DebouncedTextField extends StatefulWidget {
     this.minLines,
     this.maxLines = 1,
     this.onSubmitted,
+    this.textCapitalization = TextCapitalization.none,
   })  : assert(!delay.isNegative, 'delay must be >= 0'),
         assert(leading || trailing, 'Either leading or trailing must be enabled');
 
@@ -41,7 +42,7 @@ class DebouncedTextField extends StatefulWidget {
   /// Ensures a callback at least every [maxWait] duration if provided.
   final Duration? maxWait;
 
-  /// Debounced change callback.
+  /// Debounced change callback triggered once the user pauses typing.
   final ValueChanged<String>? onChangedDebounced;
 
   /// Immediate change callback forwarded to the underlying [TextField].
@@ -86,12 +87,15 @@ class DebouncedTextField extends StatefulWidget {
   /// Callback when the user submits the field.
   final ValueChanged<String>? onSubmitted;
 
+  /// Text capitalization strategy.
+  final TextCapitalization textCapitalization;
+
   @override
-  State<DebouncedTextField> createState() => _DebouncedTextFieldState();
+  State<SmartDebouncerTextField> createState() => _SmartDebouncerTextFieldState();
 }
 
-class _DebouncedTextFieldState extends State<DebouncedTextField> {
-  late SmartDebouncer<void> _debouncer;
+class _SmartDebouncerTextFieldState extends State<SmartDebouncerTextField> {
+  late Debouncer<void> _debouncer;
 
   @override
   void initState() {
@@ -100,7 +104,7 @@ class _DebouncedTextFieldState extends State<DebouncedTextField> {
   }
 
   @override
-  void didUpdateWidget(DebouncedTextField oldWidget) {
+  void didUpdateWidget(SmartDebouncerTextField oldWidget) {
     super.didUpdateWidget(oldWidget);
     if (oldWidget.delay != widget.delay ||
         oldWidget.leading != widget.leading ||
@@ -117,8 +121,8 @@ class _DebouncedTextFieldState extends State<DebouncedTextField> {
     super.dispose();
   }
 
-  SmartDebouncer<void> _createDebouncer() {
-    return SmartDebouncer<void>(
+  Debouncer<void> _createDebouncer() {
+    return Debouncer<void>(
       delay: widget.delay,
       leading: widget.leading,
       trailing: widget.trailing,
@@ -151,6 +155,7 @@ class _DebouncedTextFieldState extends State<DebouncedTextField> {
       enabled: widget.enabled,
       minLines: widget.minLines,
       maxLines: widget.maxLines,
+      textCapitalization: widget.textCapitalization,
       onChanged: _handleChanged,
       onSubmitted: widget.onSubmitted,
     );
