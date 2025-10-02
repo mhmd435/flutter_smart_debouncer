@@ -1,5 +1,5 @@
-import 'package:flutter_test/flutter_test.dart';
 import 'package:fake_async/fake_async.dart';
+import 'package:test/test.dart';
 
 import '../lib/flutter_smart_debouncer.dart';
 
