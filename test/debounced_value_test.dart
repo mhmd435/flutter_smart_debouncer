@@ -1,7 +1,7 @@
 import 'package:fake_async/fake_async.dart';
 import 'package:test/test.dart';
 
-import '../lib/flutter_smart_debouncer.dart';
+import 'package:flutter_smart_debouncer/flutter_smart_debouncer.dart';
 
 void main() {
   test('DebouncedValue emits via stream after delay', () {

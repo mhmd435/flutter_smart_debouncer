@@ -1,7 +1,7 @@
 import 'package:fake_async/fake_async.dart';
 import 'package:test/test.dart';
-import '../lib/src/core/debounce_pool.dart';
-import '../lib/src/core/smart_debouncer.dart' as debouncer;
+import 'package:flutter_smart_debouncer/src/core/debounce_pool.dart';
+import 'package:flutter_smart_debouncer/src/core/smart_debouncer.dart' as debouncer;
 
 void main() {
   tearDown(() {

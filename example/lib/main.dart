@@ -99,8 +99,8 @@ class _DebouncerDemoPageState extends State<DebouncerDemoPage> {
           const SizedBox(height: 16),
           SmartDebouncerButton(
             delay: const Duration(milliseconds: 700),
-            child: const Text('Submit once'),
             onPressed: _handleProtectedSubmit,
+            child: const Text('Submit once'),
           ),
           const SizedBox(height: 8),
           Text('Accepted submissions: $_submissionCount'),

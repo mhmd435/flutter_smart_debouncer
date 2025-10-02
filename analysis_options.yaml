@@ -5,9 +5,7 @@ linter:
     - avoid_print
     - prefer_const_constructors
     - prefer_final_locals
-    - avoid_returning_null_for_future
     - prefer_single_quotes
-    - public_member_api_docs
 
 analyzer:
   language:
