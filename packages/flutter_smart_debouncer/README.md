@@ -2,64 +2,38 @@
 
 [![pub package](https://img.shields.io/pub/v/flutter_smart_debouncer.svg)](https://pub.dev/packages/flutter_smart_debouncer)
 [![Build status](https://github.com/example/flutter_smart_debouncer/actions/workflows/dart.yml/badge.svg)](https://github.com/example/flutter_smart_debouncer/actions/workflows/dart.yml)
+[![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
-```
-  _____ _       _   _            _                 _      _                         
- / ____| |     | | (_)          | |               | |    | |                        
-| (___ | |_ ___| |_ _  ___ ___  | |__   ___   ___ | | ___| |_ _ __ ___   ___  _ __  
- \___ \| __/ _ \ __| |/ __/ __| | '_ \ / _ \ / _ \| |/ _ \ __| '_ ` _ \ / _ \| '_ \ 
- ____) | ||  __/ |_| | (__\__ \ | | | | (_) | (_) | |  __/ |_| | | | | | (_) | | | |
-|_____/ \__\___|\__|_|\___|___/ |_| |_|\___/ \___/|_|\___|\__|_| |_| |_|\___/|_| |_|
-```
+Smart debouncing and throttling for modern Dart & Flutter apps. Keep noisy signals under control with predictable execution semantics, async safety, and a polished developer experience.
 
-Smart debouncing and throttling for modern Dart & Flutter apps. Keep noisy signals under control with predictable execution semantics, async safety, and polished developer experience.
+`flutter_smart_debouncer` bundles production-ready utilities for debouncing, throttling, pooling, and reactive values with full null-safety. Use it to smooth text inputs, rate-limit network calls, or coordinate work across isolates and widgets.
 
-## Why debounce *and* throttle?
-
-Debounce waits for silence before firing, while throttle limits how often events fire. `flutter_smart_debouncer` gives you both, tuned for UI, networking, and background workloads.
+> Looking for a ready-made widget? Check out the optional [`flutter_smart_debouncer_widgets`](../flutter_smart_debouncer_widgets) package.
 
 ## Features
 
 - ✅ Async-aware debouncer with leading/trailing edges and `maxWait`
-- ✅ Per-key debounce pools for form validation and batch processing
-- ✅ Smart throttle with leading/trailing options
-- ✅ Stream extensions to debounce/throttle streams without extra deps
-- ✅ `DebouncedValue` reactive helper for state management
-- ✅ Optional Flutter bindings with `DebouncedTextField`
+- ✅ Pool debouncers by key for form validation and batching workflows
+- ✅ Smart throttle with separate leading/trailing control
+- ✅ Stream extensions to debounce/throttle without extra dependencies
+- ✅ `DebouncedValue` reactive helper for simple state management
 - ✅ Deterministic tests with `fake_async`
-- ✅ Null-safe and web ready
+- ✅ Thorough documentation and example app
 
-## Timing diagrams
+## Installation
 
-### Debounce (leading + trailing)
+Add the package to your `pubspec.yaml`:
 
-```
-Calls:   |x|x|x|   |x|
-Leading: X            
-Trailing:      -----X      -----X
-```
-
-### Debounce with maxWait
-
-```
-Time -->
-Call:  x x x x x x x x
-Run:   X       X       X
-        <maxWait>
+```yaml
+dependencies:
+  flutter_smart_debouncer: ^1.0.0
 ```
 
-### Throttle (leading + trailing)
+Then run `dart pub get` (or `flutter pub get`).
 
-```
-Calls:   |x|x|x|x|   |x|
-Leading: X       X
-Trailing:     X       X
-Interval: <----->
-```
+## Usage
 
-## Quick start
-
-### Simple search box debounce
+### Debounce a search box
 
 ```dart
 final debouncer = SmartDebouncer<void>(delay: const Duration(milliseconds: 300));
@@ -96,7 +70,7 @@ Future<void> validateField(String field, String value) {
 }
 ```
 
-### Scroll throttle
+### Throttle scroll callbacks
 
 ```dart
 final scrollThrottle = SmartThrottle<void>(interval: const Duration(milliseconds: 100));
@@ -106,7 +80,7 @@ void onScroll() {
 }
 ```
 
-## Stream helpers
+### Stream helpers
 
 ```dart
 stream.debounceTime(const Duration(milliseconds: 300));
@@ -117,7 +91,7 @@ stream.throttleTime(
 );
 ```
 
-## DebouncedValue
+### DebouncedValue for reactive state
 
 ```dart
 final value = DebouncedValue<int>(0, delay: const Duration(milliseconds: 200));
@@ -126,36 +100,31 @@ value.set(1);
 value.set(2);
 ```
 
-## FAQ
+## Examples
 
-**Why didn’t my action run?**
+Clone the repository and run the [example application](example/lib/main.dart) to see the utilities in action:
 
-Ensure `trailing` is true or call `flush()` to force the last action. When `leading` is true and `trailing` is false, only the first call in a burst runs.
+```bash
+cd example
+dart run
+```
 
-**Why did it run twice?**
+The example prints debounced, throttled, and pooled output directly to the console and demonstrates `DebouncedValue` usage.
 
-Using `leading` and `trailing` together means the first call fires immediately and the last call in the window fires after the delay. Disable one edge if you only need a single run.
+## API reference
 
-**How does `maxWait` interact with `leading`?**
-
-`maxWait` guarantees execution at most every `maxWait` duration. If `leading` is true, the first run happens immediately and `maxWait` is counted from that run.
-
-**How do I test with `fake_async`?**
-
-Wrap your test body in `fakeAsync((async) { ... })` and advance time using `async.elapse(...)`. All timers inside `SmartDebouncer` use the zone’s clock, so tests stay deterministic.
-
-**What about background tabs on the web?**
-
-Timers may be throttled by the browser; `maxWait` helps ensure periodic execution once the tab becomes active again.
-
-## Performance
-
-`SmartDebouncer` uses a single active timer per instance with O(1) updates. It avoids chained microtasks to prevent drift and works equally well on the VM and the web.
+Read the full API reference on [pub.dev](https://pub.dev/documentation/flutter_smart_debouncer/latest/).
 
 ## Contributing
 
-We welcome contributions! Please file an issue first, run the provided tests, and follow the included analysis options. Pull requests should include tests and updated documentation when relevant.
+Contributions are welcome! Please:
+
+1. File an issue describing the change or bug fix.
+2. Run the analyzer and tests (`dart analyze`, `dart test`).
+3. Update documentation and add tests for new features.
+
+For monorepo-specific workflows, refer to the repository README.
 
 ## License
 
-[MIT](LICENSE)
+Distributed under the [MIT License](LICENSE).
