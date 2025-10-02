@@ -1,45 +1,121 @@
-// ignore_for_file: avoid_print
-
-import 'dart:async';
-
+import 'package:flutter/material.dart';
 import 'package:flutter_smart_debouncer/flutter_smart_debouncer.dart';
 
-/// Entry point for the console example that showcases the package APIs.
-Future<void> main() async {
-  final debouncer = SmartDebouncer<void>(delay: const Duration(milliseconds: 300));
-  final throttle = SmartThrottle<void>(interval: const Duration(milliseconds: 500));
-  final pool = DebouncePool<void>(
-    defaultDelay: const Duration(milliseconds: 400),
-    ttl: const Duration(seconds: 5),
+void main() {
+  runApp(const DebouncerExampleApp());
+}
+
+class DebouncerExampleApp extends StatelessWidget {
+  const DebouncerExampleApp({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'flutter_smart_debouncer',
+      theme: ThemeData(colorSchemeSeed: Colors.indigo),
+      home: const DebouncerDemoPage(),
+    );
+  }
+}
+
+class DebouncerDemoPage extends StatefulWidget {
+  const DebouncerDemoPage({super.key});
+
+  @override
+  State<DebouncerDemoPage> createState() => _DebouncerDemoPageState();
+}
+
+class _DebouncerDemoPageState extends State<DebouncerDemoPage> {
+  late final Debouncer<void> _apiDebouncer = Debouncer<void>(
+    delay: const Duration(milliseconds: 350),
+    maxWait: const Duration(seconds: 1),
   );
 
-  print('Simulating autosave edits');
-  for (var i = 0; i < 3; i++) {
-    await debouncer(() async {
-      print('[autosave] commit revision $i');
-    });
-    await Future<void>.delayed(const Duration(milliseconds: 200));
+  final List<String> _log = <String>[];
+  int _submissionCount = 0;
+
+  @override
+  void dispose() {
+    _apiDebouncer.dispose();
+    super.dispose();
   }
 
-  print('Throttle scrolling');
-  for (var i = 0; i < 20; i++) {
-    await throttle(() async {
-      print('[throttle] frame $i');
-    });
-    await Future<void>.delayed(const Duration(milliseconds: 100));
-  }
-
-  print('Per-field validation');
-  for (final field in ['email', 'username', 'email']) {
-    pool.call(field, () async {
-      print('[pool] validating $field');
+  void _appendLog(String message) {
+    if (!mounted) {
+      return;
+    }
+    setState(() {
+      _log.insert(0, message);
     });
   }
 
-  final debouncedValue = DebouncedValue<String>('', delay: const Duration(milliseconds: 200));
-  debouncedValue.stream.listen((value) => print('[value] $value'));
-  debouncedValue.set('hello');
-  debouncedValue.set('hello world');
-  await Future<void>.delayed(const Duration(milliseconds: 300));
-  await debouncedValue.close();
+  void _handleManualSearch(String query) {
+    _appendLog('Input changed to "$query" (core Debouncer queued)');
+    _apiDebouncer(() async {
+      _appendLog('Calling API for "$query"...');
+      await Future<void>.delayed(const Duration(milliseconds: 500));
+      _appendLog('API call for "$query" finished');
+    });
+  }
+
+  void _handleWidgetSearch(String value) {
+    _appendLog('SmartDebouncerTextField emitted "$value"');
+  }
+
+  void _handleProtectedSubmit() {
+    setState(() {
+      _submissionCount++;
+    });
+    _appendLog('SmartDebouncerButton accepted tap #$_submissionCount');
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: const Text('Smart debouncing demo')),
+      body: ListView(
+        padding: const EdgeInsets.all(16),
+        children: [
+          Text('Function-level debouncing', style: Theme.of(context).textTheme.titleMedium),
+          const SizedBox(height: 8),
+          TextField(
+            decoration: const InputDecoration(
+              border: OutlineInputBorder(),
+              labelText: 'Search (manual Debouncer)',
+            ),
+            onChanged: _handleManualSearch,
+          ),
+          const SizedBox(height: 24),
+          Text('Widget-level debouncing', style: Theme.of(context).textTheme.titleMedium),
+          const SizedBox(height: 8),
+          SmartDebouncerTextField(
+            delay: const Duration(milliseconds: 250),
+            decoration: const InputDecoration(
+              border: OutlineInputBorder(),
+              labelText: 'Search (SmartDebouncerTextField)',
+            ),
+            onChangedDebounced: _handleWidgetSearch,
+          ),
+          const SizedBox(height: 16),
+          SmartDebouncerButton(
+            delay: const Duration(milliseconds: 700),
+            child: const Text('Submit once'),
+            onPressed: _handleProtectedSubmit,
+          ),
+          const SizedBox(height: 8),
+          Text('Accepted submissions: $_submissionCount'),
+          const SizedBox(height: 24),
+          Text('Event log', style: Theme.of(context).textTheme.titleMedium),
+          const SizedBox(height: 8),
+          if (_log.isEmpty)
+            const Text('Interact with the widgets to populate the log.')
+          else
+            ..._log.map((entry) => Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 4),
+                  child: Text(entry),
+                )),
+        ],
+      ),
+    );
+  }
 }
