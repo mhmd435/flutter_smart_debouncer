@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:fake_async/fake_async.dart';
 import 'package:flutter_smart_debouncer/flutter_smart_debouncer.dart';
+import 'package:flutter_smart_debouncer/src/core/smart_debouncer.dart';
 import 'package:test/test.dart';
 
 void main() {

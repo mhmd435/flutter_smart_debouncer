@@ -5,7 +5,7 @@ import '../core/debouncer.dart';
 /// A [TextField] that throttles its debounced callback using
 /// [Debouncer]-powered semantics.
 class SmartDebouncerTextField extends StatefulWidget {
-  const SmartDebouncerTextField({
+ SmartDebouncerTextField({
     super.key,
     required this.delay,
     this.leading = false,

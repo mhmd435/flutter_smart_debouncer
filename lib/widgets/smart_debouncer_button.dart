@@ -5,7 +5,7 @@ import '../core/debouncer.dart';
 /// A convenience button that protects against accidental double taps using a
 /// [Debouncer].
 class SmartDebouncerButton extends StatefulWidget {
-  const SmartDebouncerButton({
+ SmartDebouncerButton({
     super.key,
     required this.child,
     required this.delay,
