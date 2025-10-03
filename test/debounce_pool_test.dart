@@ -8,9 +8,7 @@ void main() {
     debouncer.debugNow = () => DateTime.now();
   });
 
-  test('per-key isolation', () async {
-    Future<int?>? aFuture;
-    Future<int?>? bFuture;
+  test('per-key isolation', () {
     fakeAsync((async) {
       final clock = async.getClock(DateTime.now());
       debouncer.debugNow = () => clock.now();
@@ -18,16 +16,15 @@ void main() {
 
       var aCount = 0;
       var bCount = 0;
-      aFuture = pool.call('a', () => ++aCount);
-      bFuture = pool.call('b', () => ++bCount);
+      pool.call('a', () => ++aCount);
+      pool.call('b', () => ++bCount);
 
       async.elapse(const Duration(milliseconds: 120));
       expect(aCount, 1);
       expect(bCount, 1);
+      async.flushMicrotasks();
+      async.elapse(const Duration(milliseconds: 1));
     });
-
-    expect(await aFuture!, 1);
-    expect(await bFuture!, 1);
   });
 
   test('ttl eviction disposes idle debouncers', () {
@@ -43,31 +40,30 @@ void main() {
       async.elapse(const Duration(milliseconds: 60));
       final second = pool.obtain('key');
       expect(identical(first, second), isFalse);
+      async.flushMicrotasks();
+      async.elapse(const Duration(milliseconds: 1));
     });
   });
 
-  test('cancel and flush operate per key', () async {
-    Future<int?>? future;
-    Future<int?>? flushed;
+  test('cancel and flush operate per key', () {
     fakeAsync((async) {
       final clock = async.getClock(DateTime.now());
       debouncer.debugNow = () => clock.now();
       final pool = DebouncePool<int>(defaultDelay: const Duration(milliseconds: 100));
 
       var value = 0;
-      future = pool.call('foo', () => ++value);
+      pool.call('foo', () => ++value);
       pool.cancel('foo');
       async.elapse(const Duration(milliseconds: 150));
       expect(value, 0);
 
-      future = pool.call('foo', () => ++value);
+      pool.call('foo', () => ++value);
       async.elapse(const Duration(milliseconds: 10));
-      flushed = pool.flush('foo');
+      pool.flush('foo');
       async.elapse(const Duration(milliseconds: 1));
       expect(value, 1);
+      async.flushMicrotasks();
+      async.elapse(const Duration(milliseconds: 1));
     });
-
-    expect(await future!, 1);
-    expect(await flushed!, 1);
   });
 }

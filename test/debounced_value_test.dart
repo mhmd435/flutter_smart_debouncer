@@ -13,7 +13,9 @@ void main() {
       value.set(1);
       async.elapse(const Duration(milliseconds: 30));
       value.set(2);
-      async.elapse(const Duration(milliseconds: 30));
+      // Need to elapse at least the full debounce delay after the last set
+      // so that the debounced emission occurs.
+      async.elapse(const Duration(milliseconds: 50));
 
       expect(outputs, [2]);
       value.close();
