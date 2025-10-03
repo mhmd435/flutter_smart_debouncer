@@ -5,6 +5,7 @@ void main() {
   runApp(const DebouncerExampleApp());
 }
 
+
 class DebouncerExampleApp extends StatelessWidget {
   const DebouncerExampleApp({super.key});
 
