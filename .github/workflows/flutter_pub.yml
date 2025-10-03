@@ -39,7 +39,7 @@ jobs:
     needs: build
     name: Publish to pub.dev
     runs-on: ubuntu-latest
-    environment: production
+    environment: prod-package
     steps:
       - uses: actions/checkout@v4
 
