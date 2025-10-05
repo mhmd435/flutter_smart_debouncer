@@ -18,7 +18,7 @@ Add the package to your app:
 
 ```yaml
 dependencies:
-  flutter_smart_debouncer: ^1.0.0
+  flutter_smart_debouncer: ^1.0.1
 ```
 
 ### Debounce anything in Dart code
