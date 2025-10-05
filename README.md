@@ -1,7 +1,6 @@
 # flutter_smart_debouncer
 
 [![pub package](https://img.shields.io/pub/v/flutter_smart_debouncer.svg)](https://pub.dev/packages/flutter_smart_debouncer)
-[![Build status](https://github.com/example/flutter_smart_debouncer/actions/workflows/dart.yml/badge.svg)](https://github.com/example/flutter_smart_debouncer/actions/workflows/dart.yml)
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
 `flutter_smart_debouncer` is a unified toolkit for taming noisy inputs. It

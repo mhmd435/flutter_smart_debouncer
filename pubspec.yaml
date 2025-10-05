@@ -1,5 +1,5 @@
 name: flutter_smart_debouncer
-version: 1.0.0
+version: 1.0.1
 
 description: A unified package providing debouncing utilities and smart Flutter widgets (TextField, Button, etc.).
 repository: https://github.com/mhmd435/flutter_smart_debouncer
